@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alphabet</title>
+    <title>Alphabet Generator</title>
     <link rel="stylesheet" href="../style/style.css">
 </head>
 <body>
+
     <h1>Alphabet Generator</h1>
     <button id="btn-tirer">Tirer un signe</button>
 
@@ -15,28 +16,31 @@
     </div>
 
     <script>
-    const btn = document.getElementById('btn-tirer');
+        const btn = document.getElementById('btn-tirer');
         const content = document.getElementById('resultat');
 
         btn.addEventListener('click', async () => {
             content.innerHTML = "<p>Chargement...</p>";
             
             try {
-                const response = await fetch('/fa/random');
+                // Utilisation d'un paramètre aléatoire pour éviter le cache navigateur
+                const response = await fetch('/fa/random?nocache=' + Date.now());
                 const data = await response.json();
 
-                // On affiche la donnée qui vient de la base SQLite !
+                // On vérifie que la prescription existe, sinon on met un message par défaut
+                const prescriptionAffichage = data.prescription ? data.prescription : "Aucune prescription trouvée.";
+
                 content.innerHTML = `
                     <h2>${data.signe}</h2>
                     <p>${data.description}</p>
-                    <hr style="border: 0.5px solid #eee; margin: 15px 0;">
-                    <p style="color: #2e7d32; font-style: italic;">
-                        <strong>Prescription issue de la BDD :</strong><br> 
-                        ${data.prescription}
-                    </p>
+                    <div class="prescription-text">
+                        <strong>Conseil du Fa :</strong><br>
+                        ${prescriptionAffichage}
+                    </div>
                 `;
             } catch (err) {
-                content.innerHTML = "<p style='color:red'>Erreur de connexion</p>";
+                console.error("Erreur Fetch:", err);
+                content.innerHTML = "<p style='color:red'>Erreur de connexion au serveur</p>";
             }
         });
     </script>
