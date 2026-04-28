@@ -15,20 +15,25 @@
     </div>
 
     <script>
-        const btn = document.getElementById('btn-tirer');
+    const btn = document.getElementById('btn-tirer');
         const content = document.getElementById('resultat');
 
         btn.addEventListener('click', async () => {
             content.innerHTML = "<p>Chargement...</p>";
             
             try {
-                // Appel à l'API via le serveur local
                 const response = await fetch('/fa/random');
                 const data = await response.json();
 
+                // On affiche la donnée qui vient de la base SQLite !
                 content.innerHTML = `
                     <h2>${data.signe}</h2>
                     <p>${data.description}</p>
+                    <hr style="border: 0.5px solid #eee; margin: 15px 0;">
+                    <p style="color: #2e7d32; font-style: italic;">
+                        <strong>Prescription issue de la BDD :</strong><br> 
+                        ${data.prescription}
+                    </p>
                 `;
             } catch (err) {
                 content.innerHTML = "<p style='color:red'>Erreur de connexion</p>";
