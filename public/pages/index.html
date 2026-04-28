@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabet</title>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+    <h1>Alphabet Generator</h1>
+    <button id="btn-tirer">Tirer un signe</button>
+
+    <div id="resultat">
+        <p>Prêt pour le tirage ?</p>
+    </div>
+
+    <script>
+        const btn = document.getElementById('btn-tirer');
+        const content = document.getElementById('resultat');
+
+        btn.addEventListener('click', async () => {
+            content.innerHTML = "<p>Chargement...</p>";
+            
+            try {
+                // Appel à l'API via le serveur local
+                const response = await fetch('/fa/random');
+                const data = await response.json();
+
+                content.innerHTML = `
+                    <h2>${data.signe}</h2>
+                    <p>${data.description}</p>
+                `;
+            } catch (err) {
+                content.innerHTML = "<p style='color:red'>Erreur de connexion</p>";
+            }
+        });
+    </script>
+</body>
+</html>
